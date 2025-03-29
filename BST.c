@@ -5,8 +5,14 @@
 typedef enum {true=1,false=0}bool; 
 
 //Not using the entire math library for one function lol
-int ceiling(int a, int b){
-   return (!a%b) ? a/b : (a/b)+1;
+int sigfigs(int a){
+   if(a == 0) return 1;
+   int sigfigs = 0;
+   while(a > 0){
+      a/=10;
+      ++sigfigs;
+   }
+   return sigfigs;
 }
 
 //BST Node struct that stores a int
@@ -25,16 +31,28 @@ Node* new(int key){
    return root;
 }
 
+static bool found = false;
+
 Node* search(Node* root, int key){
 
    // Base Key is NULL:
-   if(root == NULL || root->key == key) return root;
+   //if(root == NULL || root->key == key) return root;
 
+   if(root == NULL){
+      printf("Found nothing...\n\n");
+      return root;
+   }else if(root->key == key){
+      printf("Found %i!!\n\n",key);
+      return root;
+   }
+   printf("At %i",root->key);
+   printf("...traveling left!\n");
    //Current Key is greater than target key, recurse left
    if(root->key > key) return search(root->left,key);
 
+   printf("...traveling right!\n");
    //Current Key is less than target key, recurse right
-   else return search(root->right,key);
+   return search(root->right,key);
 }
 
 Node* insert(Node* root,int key){
@@ -77,6 +95,7 @@ Node* delete(Node* root,int key){
 
    // if key is equal to root...
    else{
+      found = true;
       // node has one(only has a left or right child) or zero children:
       if(root->left == NULL){
          Node* temp = root->right; //from main, we set root=delete(root,root->key);
@@ -168,7 +187,7 @@ void menu(){
       size_t leninput = 0;
       ssize_t read = getline(&input,&leninput,stdin);
       
-      int conv;
+      int conv,key;
 
       switch(atoi(input)){
          case 1:
@@ -178,7 +197,7 @@ void menu(){
             if(!strcmp("B\n",input)) break;
             conv = atoi(input);
             
-            if(ceiling(conv,10) != read-1){
+            if(sigfigs(conv) != read-1){
                printf("Invalid Input.\n");
                goto c1;
             }
@@ -192,9 +211,16 @@ void menu(){
             read = getline(&input,&leninput,stdin);
             if(!strcmp("B\n",input)) break;
             conv = atoi(input);
+            
+            if(sigfigs(conv) != read-1){
+               printf("Invalid Input.\n");
+               goto c2;
+            }
 
             root = delete(root,conv);
-            --count;
+            if(found) --count;
+            else printf("Value not found.\n");
+            found = false;
             goto c2;
          case 3:
             c3:
@@ -236,12 +262,30 @@ void menu(){
 
             break;
          case 4:
-            //TODO
-            printf("Enter a element to search for --> ");
+            c4:
             printf("1: Depth First Search\n");
             printf("2: Breadth First Search\n");
-            printf("3: Back\n");
+            printf("3: Binary Search\n");
+            printf("4: Back\n");
             printf("\nInput --> ");
+         
+            read = getline(&input,&leninput,stdin);
+
+            switch(atoi(input)){
+               case 1:
+                  //TODO
+                  goto c4;
+               case 2:
+                  //TODO
+                  goto c4;
+               case 3:
+                  printf("\nLooking for --> ");
+                  read = getline(&input,&leninput,stdin);
+                  search(root,atoi(input));
+                  goto c4;
+
+            }
+
             break;
          case 5:
             printf("Clearing Tree..\n\n");
@@ -278,6 +322,7 @@ void menu(){
             //TODO
             printf("Quitting...\n");
             free(input);
+            freetree(root);
             return;
          default:
             break;

@@ -139,13 +139,39 @@ void freetree(Node* root){
 }
 
 int main(){
-	int arr[] = {5, 2, 1, 7, 4, 6, 3};
-	int i=0,len = sizeof(arr)/sizeof(arr[0]);
 
+	char* arrinput = NULL;
+        size_t leninput = 0;
+        ssize_t read;
+
+        printf("Enter array elements, each separated with a ',' : ");
+        read = getline(&arrinput,&leninput,stdin);
+
+        int* arr;
+        int count = 0;
+
+        char* token = strtok(arrinput,",");
+        while(token != NULL){
+                int *temp = realloc(arr,(1+count) * sizeof(int));
+
+                if(temp == NULL){
+                        printf("Failed malloc.\n");
+                        free(arr),free(arrinput);
+                        return 1;
+                }
+
+                arr = temp;
+                arr[count++] = atoi(token);
+                token = strtok(NULL,",");
+        }
+
+
+	//int arr[] = {5, 2, 1, 7, 4, 6, 3};
+	int i=0;
 	Node* root = NULL;
-	while(i < len) root = insert(root,arr[i++]);
+	while(i < count) root = insert(root,arr[i++]);
 	
-	printf("Enter \"quit\" to exit.\n");
+	printf("\nEnter \"quit\" to exit.\n");
 	redo:
 	printf("\nChoose your method of traversal(in,pre,post): ");	
 

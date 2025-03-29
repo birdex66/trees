@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef enum {true=1,false=0}bool; 
+
 //BST Node struct that stores a int
 typedef struct Node{
 	int key;
@@ -138,60 +140,130 @@ void freetree(Node* root){
 	free(root);
 }
 
-int main(){
+bool menu(Node* root){
+	printf("Interact with a BST!\n\n");
+	printf("1: Insert\n");
+	printf("2: Remove\n");
+	printf("3: View\n");
+	printf("4: Search\n");
+	printf("5: Clear Tree\n");
+	printf("6: Practice\n");
+	printf("7: Learn\n");
+	printf("8: Quit\n");
 
-	char* arrinput = NULL;
-        size_t leninput = 0;
+	printf("\nInput --> ");
+
+	char* input;
+
+	size_t leninput = 0;
         ssize_t read;
+	read = getline(&arrinput,&leninput,stdin);
 
-        printf("Enter array elements, each separated with a ',' : ");
-        read = getline(&arrinput,&leninput,stdin);
+	switch(atoi(input)){
+		case 1:
+			printf("Enter a value to insert --> ");
+			break;
+		case 2:
+			printf("Enter a value to remove --> ");
+			break;
+		case 3:
+			printf("1: Display Tree\n");
+			printf("2: Print Order\n");
+			printf("\nInput --> ");
+			break;
+		case 4:
+			printf("Enter a element to search for --> ");
+			printf("1: Depth First Search\n");
+			printf("2: Breadth First Search\n");
+			printf("\nInput --> ");
+			break;
+		case 5:
+			printf("Clearing Tree..\n\n");
+                        if(root) freetree(root),root=NULL;
+			break;
+		case 6:
+			printf("1: Insertion\n");
+			printf("2: Removal\n");
+			printf("3. Order of Traversal\n");
 
-        int* arr;
-        int count = 0;
+			printf("Select Practice Mode --> ");
 
-        char* token = strtok(arrinput,",");
-        while(token != NULL){
-                int *temp = realloc(arr,(1+count) * sizeof(int));
 
-                if(temp == NULL){
-                        printf("Failed malloc.\n");
-                        free(arr),free(arrinput);
-                        return 1;
-                }
+			printf("1: Use Current List\n");
+                        printf("2: Use Random List\n");
+                        
+			printf("\nInput --> ");
+	
+			break;
+		case 7:
+			printf("Learning\n");
+			break;
+		case 8:
+			printf("Quitting...\n");
+			return false;
+		default:
+			break;
+	}
 
-                arr = temp;
-                arr[count++] = atoi(token);
-                token = strtok(NULL,",");
-        }
+	return true;
+}
+
+int main(){
+	/*
+	   char* arrinput = NULL;
+	   size_t leninput = 0;
+	   ssize_t read;
+
+	   printf("Enter array elements, each separated with a ',' : ");
+	   read = getline(&arrinput,&leninput,stdin);
+
+	   int* arr;
+	   int count = 0;
+
+	   char* token = strtok(arrinput,",");
+	   while(token != NULL){
+	   int *temp = realloc(arr,(1+count) * sizeof(int));
+
+	   if(temp == NULL){
+	   printf("Failed malloc.\n");
+	   free(arr),free(arrinput);
+	   return 1;
+	   }
+
+	   arr = temp;
+	   arr[count++] = atoi(token);
+	   token = strtok(NULL,",");
+	   }
 
 
 	//int arr[] = {5, 2, 1, 7, 4, 6, 3};
 	int i=0;
 	Node* root = NULL;
 	while(i < count) root = insert(root,arr[i++]);
-	
+
 	printf("\nEnter \"quit\" to exit.\n");
-	redo:
+
+	while(1){
 	printf("\nChoose your method of traversal(in,pre,post): ");	
 
 	char input[8];
-        scanf("%s",input);
+	scanf("%s",input);
 
 	if(!strcmp("in",input)){
-		inorder(root);
+	inorder(root);
 	}else if(!strcmp("pre",input)){
-		preorder(root);
+	preorder(root);
 	}else if(!strcmp("post",input)){
-		postorder(root);
+	postorder(root);
 	}else if(!strcmp("quit",input)){
-		freetree(root);
-		return 0;
+	break;
 	}
-	
-	goto redo;	
+	}
 
-	freetree(root);
-	return 1;
+	freetree(root),free(arr),free(arrinput);
+	 */
+	Node* root = NULL;
+	while(menu(root));
+	return 0;
 }
 

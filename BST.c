@@ -157,6 +157,79 @@ void postorder(Node* root){
    }
 }
 
+Node* DFSinorder(Node* root,int key){
+   if(root == NULL){
+      printf("...found nothing\n");
+      return root;
+   } 
+  
+   printf("Checking left tree...\n");
+   Node* temp = DFSinorder(root->left,key);
+   if(temp) return temp;
+
+      if(root->key == key){ 
+      printf("Found %i!!\n",key);
+      return root;
+   }
+   
+   if(root->left == NULL && root->right == NULL) printf("Leaf: %i\n",root->key);
+   else printf("Parent: %i\n",root->key);
+
+   printf("Checking right tree...\n");
+   return DFSinorder(root->right,key);
+}
+
+
+Node* DFSpreorder(Node* root,int key){
+    if(root == NULL){
+      printf("...found nothing\n");
+      return root;
+   }else if(root->key == key){ 
+      printf("Found %i!!\n",key);
+      return root;
+   }
+
+   if(root->left == NULL && root->right == NULL) printf("Leaf: %i\n",root->key);
+   else printf("Parent: %i\n",root->key);
+   
+   printf("Checking left tree...\n");
+   Node* temp = DFSpreorder(root->left,key);
+   if(temp) return temp;
+
+   printf("Checking right tree...\n");
+   return DFSpreorder(root->right,key);
+}
+
+Node* DFSpostorder(Node* root,int key){
+   if(root == NULL){
+      printf("Found nothing...\n");
+      return root;
+   }else if(root->key == key){ 
+      printf("Found %i!!\n",key);
+      return root;
+   }
+      printf("Checking left tree...\n");
+      Node* temp =  DFSpostorder(root->left,key);
+      if(temp) return temp;
+      
+      printf("Checking right tree...\n");
+      temp=DFSpostorder(root->right,key);
+      if(temp) return temp;
+
+      if(root->left == NULL && root->right == NULL) printf("Leaf: %i\n",root->key);
+      else printf("Parent: %i\n",root->key);
+      return temp;
+}
+
+int depth(Node* root){
+   if(root == NULL) return -1;
+
+   int depthL = depth(root->left);
+   int depthR = depth(root->right);
+   
+   return ((depthL > depthR) ? depthL:depthR)+1;
+}
+
 void freetree(Node* root){
    if(root == NULL) return;
    freetree(root->left);
@@ -167,7 +240,7 @@ void freetree(Node* root){
 void menu(){
    Node* root = NULL;
    int count = 0;
-   int height = 1;
+   int height;
 
    while(true){
       printf("Interact with a BST!\n\n");
@@ -186,17 +259,17 @@ void menu(){
 
       size_t leninput = 0;
       ssize_t read = getline(&input,&leninput,stdin);
-      
+
       int conv,key;
 
       switch(atoi(input)){
          case 1:
-            c1:
+c1:
             printf("Enter a value to insert (B to go back)--> ");
             read = getline(&input,&leninput,stdin);
             if(!strcmp("B\n",input)) break;
             conv = atoi(input);
-            
+
             if(sigfigs(conv) != read-1){
                printf("Invalid Input.\n");
                goto c1;
@@ -206,12 +279,12 @@ void menu(){
             ++count;
             goto c1;
          case 2:
-            c2:
+c2:
             printf("Enter a value to remove (B to go back)--> ");
             read = getline(&input,&leninput,stdin);
             if(!strcmp("B\n",input)) break;
             conv = atoi(input);
-            
+
             if(sigfigs(conv) != read-1){
                printf("Invalid Input.\n");
                goto c2;
@@ -223,19 +296,19 @@ void menu(){
             found = false;
             goto c2;
          case 3:
-            c3:
+c3:
             printf("1: Display Tree\n");
             printf("2: Print Order\n");
             printf("3: Back\n");
             printf("\nInput --> ");
             read = getline(&input,&leninput,stdin);
-               
-               switch(atoi(input)){
-                  case 1:
-                     //TODO
-                     break;
-                  case 2:
-                  c3c2:
+
+            switch(atoi(input)){
+               case 1:
+                  printf("height: %i\n",depth(root));
+                  break;
+               case 2:
+c3c2:
                   printf("1: Inorder Traversal\n");
                   printf("2: Preorder Traversal\n");
                   printf("3: Postorder Traversal\n");
@@ -258,23 +331,47 @@ void menu(){
                         goto c3;
                   }
                   goto c3c2;
-               }
+            }
 
             break;
          case 4:
-            c4:
+c4:
             printf("1: Depth First Search\n");
             printf("2: Breadth First Search\n");
             printf("3: Binary Search\n");
             printf("4: Back\n");
             printf("\nInput --> ");
-         
+
             read = getline(&input,&leninput,stdin);
 
             switch(atoi(input)){
                case 1:
-                  //TODO
-                  goto c4;
+c4c1:
+                  printf("1: Inorder Traversal\n");
+                  printf("2: Preorder Traversal\n");
+                  printf("3: Postorder Traversal\n");
+                  printf("4: Back\n");
+                  printf("\nInput --> ");
+
+                  read = getline(&input,&leninput,stdin);
+                  conv = atoi(input);
+                  if(conv == 4) goto c4;
+
+                  printf("\nLooking for --> ");
+                  read = getline(&input,&leninput,stdin);
+
+                  switch(conv){
+                     case 1:
+                        DFSinorder(root,atoi(input));
+                        break;
+                     case 2:
+                        DFSpreorder(root,atoi(input));
+                        break;
+                     case 3:
+                        DFSpostorder(root,atoi(input));
+                        break;
+                  }
+                  goto c4c1;
                case 2:
                   //TODO
                   goto c4;
@@ -285,14 +382,13 @@ void menu(){
                   goto c4;
 
             }
-
             break;
          case 5:
             printf("Clearing Tree..\n\n");
             if(root) freetree(root),root=NULL;
             break;
          case 6:
-            c6:
+c6:
             //TODO
             printf("1: Insertion\n");
             printf("2: Removal\n");
@@ -319,7 +415,6 @@ void menu(){
             printf("Learning\n");
             break;
          case 8:
-            //TODO
             printf("Quitting...\n");
             free(input);
             freetree(root);

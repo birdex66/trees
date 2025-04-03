@@ -305,8 +305,9 @@ c3:
 
             switch(atoi(input)){
                case 1:
-                  printf("height: %i\n",depth(root));
-                  break;
+		  height = depth(root);
+                  printf("height: %i\n",height);
+             	  goto c3; 
                case 2:
 c3c2:
                   printf("1: Inorder Traversal\n");

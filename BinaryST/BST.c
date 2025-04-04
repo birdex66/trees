@@ -27,7 +27,7 @@ void menu(){
 
       switch(atoi(input)){
          case 1:
-c1:
+c1: // Insert element
             printf("Enter a value to insert (B to go back)--> ");
             read = getline(&input,&leninput,stdin);
             if(!strcmp("B\n",input)) break;
@@ -42,7 +42,7 @@ c1:
             ++count;
             goto c1;
          case 2:
-c2:
+c2: // Remove element
             printf("Enter a value to remove (B to go back)--> ");
             read = getline(&input,&leninput,stdin);
             if(!strcmp("B\n",input)) break;
@@ -59,7 +59,7 @@ c2:
             found = false;
             goto c2;
          case 3:
-c3:
+c3: // View Tree: Options
             printf("1: Display Tree\n");
             printf("2: Print Order\n");
             printf("3: Back\n");
@@ -68,11 +68,10 @@ c3:
 
             switch(atoi(input)){
                case 1:
-		  height = depth(root);
-                  printf("height: %i\n",height);
-             	  goto c3; 
+                  BFS(root,count);
+                  goto c3; 
                case 2:
-c3c2:
+c3c2: // View Tree: DFS modes of traversal
                   printf("1: Inorder Traversal\n");
                   printf("2: Preorder Traversal\n");
                   printf("3: Postorder Traversal\n");
@@ -83,7 +82,7 @@ c3c2:
 
                   switch(atoi(input)){
                      case 1:
-                        inorder(root);
+                        inorder(root,false);
                         break;
                      case 2:
                         preorder(root);
@@ -99,7 +98,7 @@ c3c2:
 
             break;
          case 4:
-c4:
+c4: // Search: options
             printf("1: Depth First Search\n");
             printf("2: Breadth First Search\n");
             printf("3: Binary Search\n");
@@ -110,7 +109,7 @@ c4:
 
             switch(atoi(input)){
                case 1:
-c4c1:
+c4c1: // Search: DFS mode of traversal
                   printf("1: Inorder Traversal\n");
                   printf("2: Preorder Traversal\n");
                   printf("3: Postorder Traversal\n");
@@ -120,6 +119,7 @@ c4c1:
                   read = getline(&input,&leninput,stdin);
                   conv = atoi(input);
                   if(conv == 4) goto c4;
+                  else if(conv < 1 || conv > 4) goto c4c1;
 
                   printf("\nLooking for --> ");
                   read = getline(&input,&leninput,stdin);
@@ -144,7 +144,10 @@ c4c1:
                   read = getline(&input,&leninput,stdin);
                   search(root,atoi(input));
                   goto c4;
-
+               case 4:
+                  break;
+               default:
+                  goto c4;
             }
             break;
          case 5:
@@ -152,7 +155,7 @@ c4c1:
             if(root) freetree(root),root=NULL;
             break;
          case 6:
-c6:
+c6: // Practice mode
             //TODO
             printf("1: Insertion\n");
             printf("2: Removal\n");
@@ -163,6 +166,7 @@ c6:
             read = getline(&input,&leninput,stdin);
             int choice = atoi(input);
             if(choice == 4) break;
+            else if (choice < 1 || choice > 4) goto c6;
 
             printf("1: Use Current List\n");
             printf("2: Use Random List\n");
